@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -11,6 +12,13 @@ import (
 )
 
 func main() {
+	cpuPercent := flag.Int("cpu", 0, "CPU usage percent (0-100)")
+	memMb := flag.Int("mem", 0, "Amount of memory to consume in MB")
+	discIOPS := flag.Int("iops", 0, "Disk IOPS")
+	discPath := flag.String("path", "/tmp/chaos-rabbit", "Disk path to write into")
+
+	flag.Parse()
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -18,9 +26,15 @@ func main() {
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
-	go stressors.BurnCPU(ctx, 90)
-	go stressors.ConsumeMemory(ctx, 10024)
-	go stressors.DiskWrite(ctx, "/tmp/123", 1000)
+	if *cpuPercent > 0 {
+		go stressors.BurnCPU(ctx, *cpuPercent)
+	}
+	if *memMb > 0 {
+		go stressors.ConsumeMemory(ctx, *memMb)
+	}
+	if *discIOPS > 0 {
+		go stressors.DiskWrite(ctx, *discPath, *discIOPS)
+	}
 
 	log.Println("chaosrabbit running. press Ctrl+C to stop")
 
