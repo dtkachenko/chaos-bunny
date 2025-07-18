@@ -2,13 +2,14 @@ package stressors
 
 import (
 	"context"
+	"log"
 	"time"
 )
 
 // BurnCPU creates load on one CPU core at the given percentage (0–100).
 func BurnCPU(ctx context.Context, percent int) {
 	if percent <= 0 || percent > 100 {
-		return // invalid or no-op
+		return
 	}
 
 	duration := time.Second // control period
@@ -16,14 +17,17 @@ func BurnCPU(ctx context.Context, percent int) {
 	sleep := duration - burn
 
 	go func() {
+		log.Printf("Loading cpu to %d Percentage", percent)
 		for {
 			select {
 			case <-ctx.Done():
 				return
 			default:
 				start := time.Now()
+				x := 0
 				for time.Since(start) < burn {
-					// busy loop (burn CPU)
+					x++
+					_ = x * x
 				}
 				time.Sleep(sleep)
 			}

@@ -20,7 +20,7 @@ func ConsumeMemory(ctx context.Context, mb int) {
 		for {
 			select {
 			case <-ctx.Done():
-				log.Printf("Releasing %dMb of memory\n")
+				log.Printf("Releasing %dMb of memory\n", mb)
 				return
 			default:
 				for i := 0; i < len(mem); i += 4096 {

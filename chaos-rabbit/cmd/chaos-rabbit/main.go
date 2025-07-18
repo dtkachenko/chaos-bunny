@@ -20,6 +20,7 @@ func main() {
 
 	go stressors.BurnCPU(ctx, 90)
 	go stressors.ConsumeMemory(ctx, 10024)
+	go stressors.DiskWrite(ctx, "/tmp/123", 1000)
 
 	log.Println("chaosrabbit running. press Ctrl+C to stop")
 
