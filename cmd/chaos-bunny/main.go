@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/dtkachenko/chaos-bunny/chaos-rabbit/internal/stressors"
+	"github.com/dtkachenko/chaos-bunny/internal/stressors"
 )
 
 func main() {
